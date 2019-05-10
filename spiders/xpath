@@ -1,0 +1,51 @@
+
+Python 2 / 3
+安装非Python的依赖 sudo apt-get install python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev libffi-dev libssl-dev
+通过pip 安装 Scrapy 框架 sudo pip install scrapy
+
+
+
+scrapy 项目步骤
+1.创建项目
+scray startproject xxx
+
+2.编写 item.py 文件
+	设置需要保存的数据字段
+3.进入 xxx/spiders
+	编写爬虫文件，文件里的的 'name' 就是爬名（不同与项目名）
+
+4.运行
+	可以定义输出的文件类型
+	scrapy crawl itcast -o teachers.json
+	scrapy crawl itcast -o teachers.xml
+	scrapy crawl itcast -o teachers.csv
+	
+	python start.py
+
+
+
+
+<div class="li_txt">
+    <h3>  xxx  </h3>
+    <h4> xxxxx </h4>
+    <p> xxxxxxxx </p>
+
+
+是不是一目了然？直接上XPath开始提取数据吧
+
+for each in response.xpath('//div[@class="li_txt"]')
+	each.xpach('./h3/text()')
+	each.xpach('./h4/text()')
+	each.xpach('./p/text()')
+
+
+
+
+
+
+
+用 pycharm 打开 spiders 项目
+配置项目
+配置执行脚本的配置
+
+

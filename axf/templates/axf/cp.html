@@ -1,0 +1,116 @@
+{%  extends 'axf/base.html' %}
+
+{% load static from staticfiles %}
+    {% block linkscript %}
+        <link rel="stylesheet" charset="utf-8" href="{% static 'cart/css/cart.css' %}"/>
+
+        <script type="text/javascript" charset="utf-8" src="{% static 'cart/js/cart.js' %}"></script>
+
+    {% endblock linkscript %}
+
+{% block base %}
+
+<div id="cart">
+
+    <h3><b>购物车</b></h3>
+    <section class="full">
+            <section>
+                <ul>
+                    <li>
+                        <div class="clear">
+                            <p class="infoJustify">收货人<b></b><p></p>:<span>sunck</span></p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="clear">
+                            <p class="infoJustify">电话<b></b><p></p>:<span>1306083612</span> <a href="" class="change">修改</a></p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="clear">
+                            <p class="infoJustify">收货地址<b></b><p></p>:<span>广州市番禺区</span></p>
+                        </div>
+                    </li>
+                </ul>
+
+                <section class="bill">
+                    <p>闪送超市</p>
+                    <p>￥0起送,22:00前满￥30免运费</p>
+                    <a href="#">凑单专区</a>
+                </section>
+
+                <section class="delivery">
+                    <span>收货时间:</span>
+                    <span>一小时送达</span>
+                    <a href="#">可预定&gt;</a>
+                </section>
+
+
+                <section class="delivery">
+                    <span>收货备注:</span>
+                    <input type="text" placeholder="可以输入100个字的特殊要求内容"/>
+                </section>
+
+
+                <menu>
+                    <ul>
+                        <!--购物车信息展示-->
+                        {% for item in carslists %}
+                            <li   class="menuList" id="{{item.productid}}li" >
+                                <div class="confirm">
+                                    <span class="ischose"  goodsid="{{item.productid}}" >
+                                        <span id="{{item.productid}}a">
+                                            {% ifequal True item.isChose %}
+                                                √
+                                            {% endifequal %}
+                                        </span>
+
+                                    </span>
+
+                                </div>
+                                <a href="#">
+                                    <img src="{{ item.productimg }}" />
+                                    <p>{{ item.productname }}</p>
+                                    <span id="{{item.productid}}price" >{{item.productprice}}</span>
+                                </a>
+
+                                <section>
+                                    {% csrf_token %}
+                                    <button class="subShopping" ga="{{item.productid}}">-</button>
+                                    <span id="{{ item.productid }}">{{ item.productnum }}</span>
+                                    <button class="addShopping"  ga="{{item.productid}}" >+</button>
+                                </section>
+                            </li>
+                        {% endfor %}
+
+
+                        <!--购物车数据处理结束-->
+                        <li class="payTheBill">
+                            <div class="confirm" ><span><span>
+                                <!--{% if trueFlag %}-->
+                                <!--√-->
+                                <!--{% endif %}-->
+
+                            </span></span></div>
+                            <p><span>全选</span><span id="totalprice">总价:{{ total }}</span></p>
+                            <!--<a id="ok">选好了</a>-->
+
+                            <span id="ok"><a href="#">选好了</a></span>
+                        </li>
+
+                    </ul>
+
+                </menu>
+            </section>
+        </section>
+
+
+
+</div>
+
+
+
+
+
+{% endblock base %}

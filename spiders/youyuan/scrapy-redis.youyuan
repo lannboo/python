@@ -1,0 +1,127 @@
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+创建项目：
+scrapy startproject youyuan
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+使用的爬虫类还是这个
+class YySpider(CrawlSpider):
++++++++++++++++++++++++++++++++++++
+未加入分布式：是如有需要 把数据存储到 redis 数据库
+
+把数据存储的配置是：
+# 使用了scrapy-redis里的去重组件，不使用scrapy默认的去重
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# 使用了scrapy-redis里的调度器组件，使用scrapy默认的调度器
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+# 允许暂停，redis请求记录不丢失
+SCHEDULER_PERSIST = True
+
+执行的爬虫的： scrapy crawl yy
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+
+
+…………………………………………………………………………………………………………………………………………………………………
+）））））））））））））））））））））））））））））
+实现分布式爬虫
+）））））））））））））））））））））））））））））
+…………………………………………………………………………………………………………………………………………………………………
+
+该虫分布式方式：
+from scrapy_redis.spiders import RedisCrawlSpider
+
+class YySpider(RedisCrawlSpider):
+    redis_key = "yyspider:start_urls"
+
+
+
+
+# 使用了scrapy-redis里的去重组件，不使用scrapy默认的去重
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# 使用了scrapy-redis里的调度器组件，使用scrapy默认的调度器
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+# 使用队列形式
+SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderQueue"
+# 允许暂停，redis请求记录不丢失
+SCHEDULER_PERSIST = True
+
+
+
+lpush yyspider:start_urls http://www.youyuan.com/find/beijing/mm18-25/advance-0-0-0-0-0-0-0/p1/
+
+
+执行的命令为|：
+scrapy runspider yy.py
+
+
+
+#################################################################################
+
+打包
+tar -cvr youyuan.tar  youyuan
+tar -cxvr youyuan.tar.gz  youyuan
+
+上传：
+sftp lanboo@192.168.0.101
+
+sftp> put youyuan.tar
+
+
+解包
+ tar -xvf youyuan.tar
+
+
+
+# _*_ coding:utf-8 _*_
+
+import json
+import pymongo
+import redis
+
+def process_item():
+    # 创建redis数据库链接
+    rediscli = redis.Redis(host='127.0.0.1', port=6379, db='0')
+    # 创建MongoDB数据库链接
+    mongodbcli = pymongo.MongoClient(host='127.0.0.1', port=27017)
+    # 创建mongodb数据库名称
+    dbname = mongodbcli['redis_mongodb']
+    # 创建mongodb数据库表的名称
+    sheetname = dbname['redis_mongodb_dgq']
+
+    offset = 0
+
+    while True:
+        # redis 数据表名 和 数据
+        source, data = rediscli.blpop("dongguanquestion:items")
+        offset += 1
+        # 将json对象转换为Python对象
+        data = json.loads(data)
+        # 将数据插入到sheetname表里
+        sheetname.insert(data)
+        print offset
+if __name__ == "__main__":
+    process_item()
+
+
+
+
+
+
+//把 redis 全存到 mysql 得先创建表结构  且全部可以 为 text 类型的都行
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,104 @@
+{%  extends 'axf/base.html' %}
+{% load static from staticfiles %}
+
+
+
+{% block linkscript %}
+        <link rel="stylesheet" charset="utf-8" href="{% static 'market/css/market.css' %}"/>
+        <script type="text/javascript" charset="utf-8" src="{% static 'market/js/market.js' %}"></script>
+{% endblock linkscript %}
+
+
+
+{% block base %}
+
+<div id="market">
+
+    <!--左侧导航页面-->
+
+    <aside>
+        <ul>
+            {% for item in leftSlider %}
+
+            <li>
+                <span class="yellowSlide"></span>
+                <a href="/market/{{item.typeid}}/0/0">{{item.typename}}</a>
+            </li>
+            {% endfor %}
+            </ul>
+    </aside>
+
+    <!--上面按钮导航页面-->
+    <section>
+        <nav>
+            <ul>
+                <!--下尖尖号没出来-->
+                    <li id="all_types"><span>全部类型<span id="all_type_logo" class="glyphicon glyphicon-chevron-down"></span></span></li>
+                    <li id="sort_rule"><span>综合排序<span id="sort_rule_logo" class="glyphicon glyphicon-chevron-down"></span></span></li>
+            </ul>
+        </nav>
+
+
+        <menu>
+            <ul id="show_goods">
+                {% for item in productList %}
+                  <!--商品信息展示-->
+                <li>
+                    <a href="#">
+                        <img src="{{ item.productimg }}">
+                            <div class="shoppingInfo">
+                                <h6>{{ item.productlongname }}</h6>
+                                <p class="detailTag"><span>精选</span><span>热销中</span></p>
+                                <p class="unit"></p>
+                                <p class="price"><span>¥{{ item.price }}</span><s>¥{{ item.marketprice }}</s></p>
+                            </div>
+                    </a>
+                    <section>
+                        <button ga="{{item.productid}}" class="subShopping">-</button>
+                        <!--显示加入购物车的该商品的数量-->
+                        <span id="{{item.productid}}">{{item.num|default:0}}</span>
+                        <button ga="{{item.productid}}" class="addShopping" >+</button>
+                    </section>
+
+                </li>
+                <!--处理数据结束-->
+                {% endfor  %}
+            </ul>
+
+            <div id="all_types_container">
+                <div>
+                    {% for item in chlidList  %}
+                     <a href="/market/{{categoryid}}/{{item.chlidId}}/0"><span>{{item.childName}}</span></a>
+                     {% endfor  %}
+                </div>
+            </div>
+
+            <div id="sort_container">
+                <div>
+
+                    <a class="sorta" href="/market/{{categoryid}}/{{cid}}/0"><span>综合排序</span></a>
+                    <a class="sorta" href="/market/{{categoryid}}/{{cid}}/1"><span>销量排序</span></a>
+                    <a class="sorta" href="/market/{{categoryid}}/{{cid}}/2"><span>价格最高</span></a>
+                    <a class="sorta" href="/market/{{categoryid}}/{{cid}}/3"><span>价格最低</span></a>
+                </div>
+
+            </div>
+
+
+        </menu>
+
+
+
+
+    </section>
+
+
+</div>
+
+
+{% endblock base %}
+
+
+
+
+
